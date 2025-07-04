@@ -1,55 +1,66 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef } from "react"
-import { useTheme } from "@/contexts/theme-context"
-import { Palette, ChevronDown } from "lucide-react"
-import { DropdownPortal } from "./dropdown-portal"
+import { useState, useRef } from "react";
+import { useTheme } from "@/contexts/theme-context";
+import { Palette, ChevronDown } from "lucide-react";
+import { DropdownPortal } from "./dropdown-portal";
 
 export function ThemeSelector() {
-  const { currentTheme, setTheme, themes } = useTheme()
-  const [isOpen, setIsOpen] = useState(false)
-  const buttonRef = useRef<HTMLButtonElement>(null)
-  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null)
+  const { currentTheme, setTheme, themes } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null);
 
   const handleToggle = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     if (!isOpen && buttonRef.current) {
-      setButtonRect(buttonRef.current.getBoundingClientRect())
+      setButtonRect(buttonRef.current.getBoundingClientRect());
     }
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
 
   const handleThemeChange = (theme: string) => {
-    setTheme(theme as any)
-    setIsOpen(false)
-  }
+    setTheme(theme as any);
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative">
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-300"
+        className="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-300 min-w-[140px] min-h-[42px]"
         style={{
           background: currentTheme.button.secondary,
           color: currentTheme.secondaryForeground,
           border: `1px solid ${currentTheme.border}`,
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = currentTheme.button.secondaryHover
+          e.currentTarget.style.background = currentTheme.button.secondaryHover;
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = currentTheme.button.secondary
+          e.currentTarget.style.background = currentTheme.button.secondary;
         }}
       >
         <Palette size={16} />
-        <span className="text-sm font-medium">{currentTheme.displayName}</span>
-        <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <span className="text-sm font-medium flex-1 text-left leading-tight">
+          {currentTheme.displayName}
+        </span>
+        <ChevronDown
+          size={16}
+          className={`transition-transform duration-200 flex-shrink-0 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
-      <DropdownPortal isOpen={isOpen} onClose={() => setIsOpen(false)} triggerRect={buttonRect}>
+      <DropdownPortal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        triggerRect={buttonRect}
+      >
         <div
           className="w-48 rounded-lg overflow-hidden backdrop-blur-md"
           style={{
@@ -65,16 +76,19 @@ export function ThemeSelector() {
               className="w-full px-4 py-3 text-left text-sm transition-colors duration-200"
               style={{
                 color: currentTheme.foreground,
-                background: currentTheme.name === theme.name ? currentTheme.accent + "20" : "transparent",
+                background:
+                  currentTheme.name === theme.name
+                    ? currentTheme.accent + "20"
+                    : "transparent",
               }}
               onMouseEnter={(e) => {
                 if (currentTheme.name !== theme.name) {
-                  e.currentTarget.style.background = currentTheme.accent + "10"
+                  e.currentTarget.style.background = currentTheme.accent + "10";
                 }
               }}
               onMouseLeave={(e) => {
                 if (currentTheme.name !== theme.name) {
-                  e.currentTarget.style.background = "transparent"
+                  e.currentTarget.style.background = "transparent";
                 }
               }}
             >
@@ -93,5 +107,5 @@ export function ThemeSelector() {
         </div>
       </DropdownPortal>
     </div>
-  )
+  );
 }

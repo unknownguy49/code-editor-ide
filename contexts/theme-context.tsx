@@ -1,122 +1,124 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { createContext, useContext, useState, useEffect } from "react"
+import type React from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
-export type ThemeName = "light" | "gradient" | "minimal" | "hacker" | "pastel"
+export type ThemeName = "light" | "gradient" | "minimal" | "hacker" | "pastel";
 
 export interface Theme {
-  name: ThemeName
-  displayName: string
-  background: string
-  foreground: string
-  card: string
-  cardForeground: string
-  primary: string
-  primaryForeground: string
-  secondary: string
-  secondaryForeground: string
-  accent: string
-  accentForeground: string
-  border: string
-  input: string
-  ring: string
+  name: ThemeName;
+  displayName: string;
+  background: string;
+  foreground: string;
+  card: string;
+  cardForeground: string;
+  primary: string;
+  primaryForeground: string;
+  secondary: string;
+  secondaryForeground: string;
+  accent: string;
+  accentForeground: string;
+  border: string;
+  input: string;
+  ring: string;
   editor: {
-    background: string
-    foreground: string
-    selection: string
-    lineNumber: string
-    keyword: string
-    string: string
-    comment: string
-    function: string
-    variable: string
-  }
+    background: string;
+    foreground: string;
+    selection: string;
+    lineNumber: string;
+    keyword: string;
+    string: string;
+    comment: string;
+    function: string;
+    variable: string;
+  };
   button: {
-    primary: string
-    primaryHover: string
-    secondary: string
-    secondaryHover: string
-  }
+    primary: string;
+    primaryHover: string;
+    secondary: string;
+    secondaryHover: string;
+  };
   glass: {
-    background: string
-    border: string
-    shadow: string
-  }
+    background: string;
+    border: string;
+    shadow: string;
+  };
 }
 
 const themes: Record<ThemeName, Theme> = {
   light: {
     name: "light",
     displayName: "Modern Light",
-    background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-    foreground: "#1a202c",
-    card: "rgba(255, 255, 255, 0.8)",
-    cardForeground: "#1a202c",
+    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+    foreground: "#1e293b",
+    card: "#ffffff",
+    cardForeground: "#1e293b",
     primary: "#3b82f6",
     primaryForeground: "#ffffff",
-    secondary: "#e2e8f0",
+    secondary: "#f1f5f9",
     secondaryForeground: "#475569",
-    accent: "#06b6d4",
+    accent: "#0ea5e9",
     accentForeground: "#ffffff",
-    border: "rgba(203, 213, 225, 0.5)",
-    input: "rgba(255, 255, 255, 0.9)",
+    border: "#d1d5db",
+    input: "#ffffff",
     ring: "#3b82f6",
     editor: {
-      background: "rgba(255, 255, 255, 0.95)",
-      foreground: "#1a202c",
-      selection: "rgba(59, 130, 246, 0.2)",
-      lineNumber: "#94a3b8",
-      keyword: "#7c3aed",
-      string: "#059669",
+      background: "#ffffff",
+      foreground: "#1e293b",
+      selection: "transparent",
+      lineNumber: "#64748b",
+      keyword: "#9333ea",
+      string: "#16a34a",
       comment: "#6b7280",
-      function: "#dc2626",
-      variable: "#0891b2",
+      function: "#ea580c",
+      variable: "#0284c7",
     },
     button: {
-      primary: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      primaryHover: "linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)",
-      secondary: "rgba(255, 255, 255, 0.8)",
-      secondaryHover: "rgba(255, 255, 255, 0.9)",
+      primary: "#3b82f6",
+      primaryHover: "#2563eb",
+      secondary: "#f1f5f9",
+      secondaryHover: "#e2e8f0",
     },
     glass: {
-      background: "rgba(255, 255, 255, 0.25)",
-      border: "rgba(255, 255, 255, 0.18)",
-      shadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+      background: "rgba(255, 255, 255, 0.8)",
+      border: "rgba(148, 163, 184, 0.3)",
+      shadow:
+        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
     },
   },
   gradient: {
     name: "gradient",
     displayName: "Futuristic Gradient",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
+    background:
+      "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%)",
     foreground: "#ffffff",
     card: "rgba(255, 255, 255, 0.1)",
     cardForeground: "#ffffff",
     primary: "#ff6b6b",
     primaryForeground: "#ffffff",
-    secondary: "rgba(255, 255, 255, 0.2)",
-    secondaryForeground: "#ffffff",
+    secondary: "rgba(255, 255, 255, 0.15)",
+    secondaryForeground: "#e2e8f0",
     accent: "#4ecdc4",
     accentForeground: "#1a202c",
     border: "rgba(255, 255, 255, 0.2)",
-    input: "rgba(255, 255, 255, 0.15)",
+    input: "rgba(255, 255, 255, 0.1)",
     ring: "#ff6b6b",
     editor: {
-      background: "rgba(0, 0, 0, 0.3)",
+      background: "rgba(0, 0, 0, 0.4)",
       foreground: "#ffffff",
-      selection: "rgba(255, 107, 107, 0.3)",
-      lineNumber: "rgba(255, 255, 255, 0.5)",
-      keyword: "#ff6b6b",
-      string: "#4ecdc4",
-      comment: "rgba(255, 255, 255, 0.6)",
-      function: "#feca57",
-      variable: "#48dbfb",
+      selection: "transparent",
+      lineNumber: "rgba(255, 255, 255, 0.6)",
+      keyword: "#ff79c6",
+      string: "#50fa7b",
+      comment: "rgba(255, 255, 255, 0.5)",
+      function: "#ffb86c",
+      variable: "#8be9fd",
     },
     button: {
-      primary: "linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)",
-      primaryHover: "linear-gradient(135deg, #ff5252 0%, #ffb74d 100%)",
-      secondary: "rgba(255, 255, 255, 0.2)",
-      secondaryHover: "rgba(255, 255, 255, 0.3)",
+      primary: "#ff6b6b",
+      primaryHover: "#ff5252",
+      secondary: "rgba(255, 255, 255, 0.15)",
+      secondaryHover: "rgba(255, 255, 255, 0.25)",
     },
     glass: {
       background: "rgba(255, 255, 255, 0.1)",
@@ -128,157 +130,161 @@ const themes: Record<ThemeName, Theme> = {
     name: "minimal",
     displayName: "Clean Minimal",
     background: "#ffffff",
-    foreground: "#000000",
+    foreground: "#0f172a",
     card: "#ffffff",
-    cardForeground: "#000000",
-    primary: "#000000",
+    cardForeground: "#0f172a",
+    primary: "#0f172a",
     primaryForeground: "#ffffff",
-    secondary: "#f8f9fa",
-    secondaryForeground: "#6c757d",
-    accent: "#6c757d",
+    secondary: "#f8fafc",
+    secondaryForeground: "#475569",
+    accent: "#64748b",
     accentForeground: "#ffffff",
-    border: "#e9ecef",
+    border: "#e2e8f0",
     input: "#ffffff",
-    ring: "#000000",
+    ring: "#0f172a",
     editor: {
       background: "#ffffff",
-      foreground: "#000000",
-      selection: "rgba(0, 0, 0, 0.1)",
-      lineNumber: "#adb5bd",
-      keyword: "#000000",
-      string: "#495057",
-      comment: "#adb5bd",
-      function: "#000000",
-      variable: "#6c757d",
+      foreground: "#0f172a",
+      selection: "transparent",
+      lineNumber: "#94a3b8",
+      keyword: "#7c2d12",
+      string: "#166534",
+      comment: "#94a3b8",
+      function: "#b91c1c",
+      variable: "#1e40af",
     },
     button: {
-      primary: "#000000",
-      primaryHover: "#343a40",
-      secondary: "#f8f9fa",
-      secondaryHover: "#e9ecef",
+      primary: "#0f172a",
+      primaryHover: "#1e293b",
+      secondary: "#f8fafc",
+      secondaryHover: "#f1f5f9",
     },
     glass: {
-      background: "rgba(255, 255, 255, 0.8)",
-      border: "rgba(0, 0, 0, 0.1)",
-      shadow: "0 2px 10px 0 rgba(0, 0, 0, 0.1)",
+      background: "rgba(248, 250, 252, 0.8)",
+      border: "rgba(148, 163, 184, 0.2)",
+      shadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
     },
   },
   hacker: {
     name: "hacker",
     displayName: "Hacker Terminal",
-    background: "radial-gradient(ellipse at center, #0d1117 0%, #000000 100%)",
-    foreground: "#00ff00",
-    card: "rgba(0, 255, 0, 0.05)",
-    cardForeground: "#00ff00",
-    primary: "#00ff00",
+    background: "radial-gradient(ellipse at center, #0a0e14 0%, #000000 100%)",
+    foreground: "#00ff41",
+    card: "rgba(0, 255, 65, 0.05)",
+    cardForeground: "#00ff41",
+    primary: "#00ff41",
     primaryForeground: "#000000",
-    secondary: "rgba(0, 255, 0, 0.1)",
-    secondaryForeground: "#00ff00",
+    secondary: "rgba(0, 255, 65, 0.1)",
+    secondaryForeground: "#00ff41",
     accent: "#39ff14",
     accentForeground: "#000000",
-    border: "rgba(0, 255, 0, 0.3)",
+    border: "rgba(0, 255, 65, 0.3)",
     input: "rgba(0, 0, 0, 0.8)",
-    ring: "#00ff00",
+    ring: "#00ff41",
     editor: {
-      background: "rgba(0, 0, 0, 0.9)",
-      foreground: "#00ff00",
-      selection: "rgba(0, 255, 0, 0.2)",
-      lineNumber: "rgba(0, 255, 0, 0.5)",
-      keyword: "#39ff14",
-      string: "#00ffff",
-      comment: "rgba(0, 255, 0, 0.6)",
-      function: "#ffff00",
-      variable: "#ff00ff",
+      background: "#0a0e14",
+      foreground: "#00ff41",
+      selection: "transparent",
+      lineNumber: "rgba(0, 255, 65, 0.6)",
+      keyword: "#b3d9ff",
+      string: "#ffffcc",
+      comment: "rgba(0, 255, 65, 0.5)",
+      function: "#ffccb3",
+      variable: "#e6ccff",
     },
     button: {
-      primary: "linear-gradient(135deg, #00ff00 0%, #39ff14 100%)",
-      primaryHover: "linear-gradient(135deg, #00cc00 0%, #2bcc0f 100%)",
-      secondary: "rgba(0, 255, 0, 0.1)",
-      secondaryHover: "rgba(0, 255, 0, 0.2)",
+      primary: "#00ff41",
+      primaryHover: "#00cc33",
+      secondary: "rgba(0, 255, 65, 0.1)",
+      secondaryHover: "rgba(0, 255, 65, 0.2)",
     },
     glass: {
-      background: "rgba(0, 255, 0, 0.05)",
-      border: "rgba(0, 255, 0, 0.2)",
-      shadow: "0 8px 32px 0 rgba(0, 255, 0, 0.2)",
+      background: "rgba(0, 255, 65, 0.05)",
+      border: "rgba(0, 255, 65, 0.2)",
+      shadow: "0 8px 32px 0 rgba(0, 255, 65, 0.2)",
     },
   },
   pastel: {
     name: "pastel",
     displayName: "Soft Pastel",
-    background: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ffecd2 100%)",
-    foreground: "#5d4e75",
-    card: "rgba(255, 255, 255, 0.7)",
-    cardForeground: "#5d4e75",
-    primary: "#ff9a9e",
+    background:
+      "linear-gradient(135deg, #fef3f2 0%, #fef2f2 50%, #fef3f2 100%)",
+    foreground: "#4c1d95",
+    card: "rgba(255, 255, 255, 0.8)",
+    cardForeground: "#4c1d95",
+    primary: "#ec4899",
     primaryForeground: "#ffffff",
-    secondary: "rgba(255, 255, 255, 0.8)",
-    secondaryForeground: "#5d4e75",
-    accent: "#a8e6cf",
-    accentForeground: "#5d4e75",
-    border: "rgba(255, 255, 255, 0.3)",
-    input: "rgba(255, 255, 255, 0.9)",
-    ring: "#ff9a9e",
+    secondary: "rgba(255, 255, 255, 0.9)",
+    secondaryForeground: "#4c1d95",
+    accent: "#06b6d4",
+    accentForeground: "#ffffff",
+    border: "rgba(236, 72, 153, 0.2)",
+    input: "rgba(255, 255, 255, 0.95)",
+    ring: "#ec4899",
     editor: {
-      background: "rgba(255, 255, 255, 0.9)",
-      foreground: "#5d4e75",
-      selection: "rgba(255, 154, 158, 0.3)",
-      lineNumber: "rgba(93, 78, 117, 0.5)",
-      keyword: "#ff6b9d",
-      string: "#95e1d3",
-      comment: "rgba(93, 78, 117, 0.6)",
-      function: "#feca57",
-      variable: "#a8e6cf",
+      background: "rgba(255, 255, 255, 0.95)",
+      foreground: "#4c1d95",
+      selection: "transparent",
+      lineNumber: "rgba(76, 29, 149, 0.6)",
+      keyword: "#7c3aed",
+      string: "#059669",
+      comment: "rgba(76, 29, 149, 0.5)",
+      function: "#ea580c",
+      variable: "#0369a1",
     },
     button: {
-      primary: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
-      primaryHover: "linear-gradient(135deg, #ff8a95 0%, #fdb5e5 100%)",
-      secondary: "rgba(255, 255, 255, 0.8)",
-      secondaryHover: "rgba(255, 255, 255, 0.9)",
+      primary: "#ec4899",
+      primaryHover: "#db2777",
+      secondary: "rgba(255, 255, 255, 0.9)",
+      secondaryHover: "rgba(255, 255, 255, 1)",
     },
     glass: {
-      background: "rgba(255, 255, 255, 0.3)",
-      border: "rgba(255, 255, 255, 0.4)",
-      shadow: "0 8px 32px 0 rgba(255, 154, 158, 0.2)",
+      background: "rgba(255, 255, 255, 0.4)",
+      border: "rgba(236, 72, 153, 0.3)",
+      shadow:
+        "0 4px 6px -1px rgba(236, 72, 153, 0.1), 0 2px 4px -1px rgba(236, 72, 153, 0.06)",
     },
   },
-}
+};
 
 interface ThemeContextType {
-  currentTheme: Theme
-  setTheme: (theme: ThemeName) => void
-  themes: Record<ThemeName, Theme>
+  currentTheme: Theme;
+  setTheme: (theme: ThemeName) => void;
+  themes: Record<ThemeName, Theme>;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [currentThemeName, setCurrentThemeName] = useState<ThemeName>("light")
+  const [currentThemeName, setCurrentThemeName] = useState<ThemeName>("light");
 
   useEffect(() => {
-    const saved = localStorage.getItem("code-editor-theme") as ThemeName
+    const saved = localStorage.getItem("code-editor-theme") as ThemeName;
     if (saved && themes[saved]) {
-      setCurrentThemeName(saved)
+      setCurrentThemeName(saved);
     }
-  }, [])
+  }, []);
 
   const setTheme = (theme: ThemeName) => {
-    setCurrentThemeName(theme)
-    localStorage.setItem("code-editor-theme", theme)
-  }
+    setCurrentThemeName(theme);
+    localStorage.setItem("code-editor-theme", theme);
+  };
 
   const value = {
     currentTheme: themes[currentThemeName],
     setTheme,
     themes,
-  }
+  };
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {
-  const context = useContext(ThemeContext)
+  const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider")
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
-  return context
+  return context;
 }

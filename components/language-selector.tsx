@@ -1,24 +1,28 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef } from "react"
-import { useTheme } from "@/contexts/theme-context"
-import { Code, ChevronDown } from "lucide-react"
-import { DropdownPortal } from "./dropdown-portal"
+import { useState, useRef } from "react";
+import { useTheme } from "@/contexts/theme-context";
+import { Code, ChevronDown } from "lucide-react";
+import { DropdownPortal } from "./dropdown-portal";
 
 export interface Language {
-  id: string
-  name: string
-  extension: string
-  template: string
+  id: string;
+  name: string;
+  extension: string;
+  template: string;
+  version?: string;
+  description?: string;
 }
 
-const languages: Language[] = [
+export const languages: readonly Language[] = [
   {
     id: "python",
     name: "Python",
     extension: ".py",
+    version: "3.11",
+    description: "High-level programming language",
     template: `# Welcome to Python!
 def hello_world():
     print("Hello, World!")
@@ -38,6 +42,8 @@ print(f"Squared numbers: {squared}")
     id: "java",
     name: "Java",
     extension: ".java",
+    version: "17",
+    description: "Object-oriented programming language",
     template: `// Welcome to Java!
 public class Main {
     public static void main(String[] args) {
@@ -67,6 +73,8 @@ public class Main {
     id: "cpp",
     name: "C++",
     extension: ".cpp",
+    version: "20",
+    description: "Systems programming language",
     template: `// Welcome to C++!
 #include <iostream>
 #include <vector>
@@ -105,6 +113,8 @@ int main() {
     id: "javascript",
     name: "JavaScript",
     extension: ".js",
+    version: "ES2023",
+    description: "Dynamic web programming language",
     template: `// Welcome to JavaScript!
 function helloWorld() {
     console.log("Hello, World!");
@@ -135,6 +145,8 @@ console.log(person.greet());
     id: "typescript",
     name: "TypeScript",
     extension: ".ts",
+    version: "5.0",
+    description: "Typed superset of JavaScript",
     template: `// Welcome to TypeScript!
 interface Person {
     name: string;
@@ -168,58 +180,72 @@ const squared: number[] = numbers.map((x: number) => x ** 2);
 console.log(\`Squared numbers: \${squared}\`);
 `,
   },
-]
+] as const;
 
 interface LanguageSelectorProps {
-  selectedLanguage: Language
-  onLanguageChange: (language: Language) => void
+  selectedLanguage: Language;
+  onLanguageChange: (language: Language) => void;
 }
 
-export function LanguageSelector({ selectedLanguage, onLanguageChange }: LanguageSelectorProps) {
-  const { currentTheme } = useTheme()
-  const [isOpen, setIsOpen] = useState(false)
-  const buttonRef = useRef<HTMLButtonElement>(null)
-  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null)
+export function LanguageSelector({
+  selectedLanguage,
+  onLanguageChange,
+}: LanguageSelectorProps) {
+  const { currentTheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null);
 
   const handleToggle = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     if (!isOpen && buttonRef.current) {
-      setButtonRect(buttonRef.current.getBoundingClientRect())
+      setButtonRect(buttonRef.current.getBoundingClientRect());
     }
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
 
   const handleLanguageChange = (language: Language) => {
-    onLanguageChange(language)
-    setIsOpen(false)
-  }
+    onLanguageChange(language);
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative">
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-300"
+        className="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-300 min-w-[140px] min-h-[42px]"
         style={{
           background: currentTheme.button.secondary,
           color: currentTheme.secondaryForeground,
           border: `1px solid ${currentTheme.border}`,
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = currentTheme.button.secondaryHover
+          e.currentTarget.style.background = currentTheme.button.secondaryHover;
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = currentTheme.button.secondary
+          e.currentTarget.style.background = currentTheme.button.secondary;
         }}
       >
         <Code size={16} />
-        <span className="text-sm font-medium">{selectedLanguage.name}</span>
-        <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <span className="text-sm font-medium flex-1 text-left leading-tight">
+          {selectedLanguage.name}
+        </span>
+        <ChevronDown
+          size={16}
+          className={`transition-transform duration-200 flex-shrink-0 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
-      <DropdownPortal isOpen={isOpen} onClose={() => setIsOpen(false)} triggerRect={buttonRect}>
+      <DropdownPortal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        triggerRect={buttonRect}
+      >
         <div
-          className="w-40 rounded-lg overflow-hidden backdrop-blur-md"
+          className="w-56 rounded-lg overflow-hidden backdrop-blur-md"
           style={{
             background: currentTheme.glass.background,
             border: `1px solid ${currentTheme.glass.border}`,
@@ -233,29 +259,45 @@ export function LanguageSelector({ selectedLanguage, onLanguageChange }: Languag
               className="w-full px-4 py-3 text-left text-sm transition-colors duration-200"
               style={{
                 color: currentTheme.foreground,
-                background: selectedLanguage.id === language.id ? currentTheme.accent + "20" : "transparent",
+                background:
+                  selectedLanguage.id === language.id
+                    ? currentTheme.accent + "20"
+                    : "transparent",
               }}
               onMouseEnter={(e) => {
                 if (selectedLanguage.id !== language.id) {
-                  e.currentTarget.style.background = currentTheme.accent + "10"
+                  e.currentTarget.style.background = currentTheme.accent + "10";
                 }
               }}
               onMouseLeave={(e) => {
                 if (selectedLanguage.id !== language.id) {
-                  e.currentTarget.style.background = "transparent"
+                  e.currentTarget.style.background = "transparent";
                 }
               }}
             >
-              <div className="flex items-center gap-3">
-                <Code size={14} />
-                <span className="font-medium">{language.name}</span>
+              <div className="flex items-start gap-3">
+                <Code size={16} className="mt-0.5 flex-shrink-0" />
+                <div className="flex flex-col flex-1 min-w-0">
+                  <span className="font-medium leading-tight">
+                    {language.name}
+                  </span>
+                  <div className="flex items-center gap-2 text-xs opacity-75 mt-0.5">
+                    {language.version && (
+                      <span className="leading-tight">{language.version}</span>
+                    )}
+                    {language.description && language.version && <span>•</span>}
+                    {language.description && (
+                      <span className="leading-tight truncate">
+                        {language.description}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             </button>
           ))}
         </div>
       </DropdownPortal>
     </div>
-  )
+  );
 }
-
-export { languages }
